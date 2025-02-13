@@ -25,21 +25,28 @@ class _GameState extends State<Game> {
   int? selectedx;
   int? selectedy;
 
-@override
+  @override
   void initState() {
-    PuzzleOptions puzzleOptions=PuzzleOptions(patternName: "winter");
-    _puzzle=Puzzle(puzzleOptions);
-    _puzzle.generate().then((_)=>setState(() {
-      
-    }));
+    PuzzleOptions puzzleOptions = PuzzleOptions(patternName: "winter");
+    _puzzle = Puzzle(puzzleOptions);
+    _puzzle.generate().then((_) => setState(() {}));
     super.initState();
   }
 
-  void _onCellTapped(int x,int y){
+  void _onCellTapped(int x, int y) {
     setState(() {
-      selectedx=x;
-      selectedy=y;
+      selectedx = x;
+      selectedy = y;
     });
+  }
+
+  void _onNumberPressed(int value) {
+    if (selectedx != null && selectedx != null) {
+      setState(() {
+        // Mettre à jour la valeur de la case sélectionnée dans le puzzle
+        _puzzle.board()?.matrix()?[selectedx!][selectedy!].setValue(value);
+      });
+    }
   }
 
   @override
@@ -76,25 +83,52 @@ class _GameState extends State<Game> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             SizedBox(
-              height: boxSize*3,
-              width: boxSize*3,
+              height: boxSize * 3,
+              width: boxSize * 3,
               child: GridView.count(
                   crossAxisCount: 3,
                   children: List.generate(9, (x) {
                     return Container(
                       width: boxSize,
                       height: boxSize,
-                      decoration: BoxDecoration(border: Border.all(color: Colors.blueAccent)),
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.blueAccent)),
                       child: GridView.count(
-                          crossAxisCount: 3,
-                        children: List.generate(9,(y){
-                          int? cellvalue=_puzzle.board()?.matrix()?[x][y].getValue();
-                          return  GrilleInterne(x: x, y: y,value: cellvalue, isSelected: selectedx==x && selectedy==y,onTap: ()=> _onCellTapped(x,y));
+                        crossAxisCount: 3,
+                        children: List.generate(9, (y) {
+                          int? cellvalue =
+                              _puzzle.board()?.matrix()?[x][y].getValue();
+                          return GrilleInterne(
+                              x: x,
+                              y: y,
+                              value: cellvalue,
+                              isSelected: selectedx == x && selectedy == y,
+                              onTap: () => _onCellTapped(x, y));
                         }),
                       ),
                     );
-                  })
-              ),
+                  })),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(5, (index) {
+                int value = index + 1;
+                return ElevatedButton(
+                  onPressed: () => _onNumberPressed(value),
+                  child: Text(value.toString()),
+                );
+              }),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(4, (index) {
+                int value = index + 6;
+                return ElevatedButton(
+                  onPressed: () => _onNumberPressed(value),
+                  child: Text(value.toString()),
+                );
+              }),
             ),
           ],
         ),

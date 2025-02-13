@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sudoku_starter/GrilleInterne.dart';
+import 'package:sudoku_api/sudoku_api.dart';
 
 class Game extends StatefulWidget {
   const Game({Key? key, required this.title}) : super(key: key);
@@ -20,17 +21,16 @@ class Game extends StatefulWidget {
 }
 
 class _GameState extends State<Game> {
-  int _counter = 0;
+  late Puzzle _puzzle;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+@override
+  void initState() {
+    PuzzleOptions puzzleOptions=PuzzleOptions(patternName: "winter");
+    _puzzle=Puzzle(puzzleOptions);
+    _puzzle.generate().then((_)=>setState(() {
+      
+    }));
+    super.initState();
   }
 
   @override
@@ -76,7 +76,13 @@ class _GameState extends State<Game> {
                       width: boxSize,
                       height: boxSize,
                       decoration: BoxDecoration(border: Border.all(color: Colors.blueAccent)),
-                      child: GrilleInterne(),
+                      child: GridView.count(
+                          crossAxisCount: 3,
+                        children: List.generate(9,(y){
+                          int? cellvalue=_puzzle.board()?.matrix()?[x][y].getValue();
+                          return  GrilleInterne(x: x, y: y,value: cellvalue);
+                        }),
+                      ),
                     );
                   })
               ),

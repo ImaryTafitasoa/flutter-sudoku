@@ -96,14 +96,14 @@ class _GameState extends State<Game> {
                       child: GridView.count(
                         crossAxisCount: 3,
                         children: List.generate(9, (y) {
-                          int? cellvalue =
-                              _puzzle.board()?.matrix()?[x][y].getValue();
+                          int? cellvalue = _puzzle.board()?.matrix()?[x][y].getValue();
+                          int? expectedValue = _puzzle.solvedBoard()?.matrix()?[x][y].getValue();
                           return GrilleInterne(
                               x: x,
                               y: y,
                               value: cellvalue,
                               isSelected: selectedx == x && selectedy == y,
-                              onTap: () => _onCellTapped(x, y));
+                              onTap: () => _onCellTapped(x, y), expectedValue: expectedValue ?? 0,);
                         }),
                       ),
                     );

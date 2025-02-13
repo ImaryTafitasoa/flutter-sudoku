@@ -5,6 +5,7 @@ class GrilleInterne extends StatefulWidget {
   final int y;
   final int? value;
   final bool isSelected;
+  final int expectedValue;
   final VoidCallback onTap;
 
   const GrilleInterne({
@@ -14,6 +15,7 @@ class GrilleInterne extends StatefulWidget {
     this.value,
     required this.isSelected,
     required this.onTap,
+    required this.expectedValue,
   });
 
   @override
@@ -37,13 +39,20 @@ class _GrilleInterneState extends State<GrilleInterne> {
             decoration: BoxDecoration(
               border: Border.all(color: Colors.black),
               color: widget.isSelected
-                ? Colors.blueAccent.shade100.withAlpha(100)
+                  ? Colors.blueAccent.shade100.withAlpha(100)
                   : Colors.transparent,
             ),
             child: Center(
               child: Text(
-                widget.value == 0 ? '' : widget.value.toString(),
-                style: const TextStyle(fontSize: 20),
+                widget.value == 0
+                    ? widget.expectedValue == 0
+                      ? ''
+                      : widget.expectedValue.toString()
+                    : widget.value.toString(),
+                style: TextStyle(
+                    fontSize: 20,
+                  color: widget.value == 0 ? Colors.black12 : Colors.black,
+                ),
               ),
             ),
           ),

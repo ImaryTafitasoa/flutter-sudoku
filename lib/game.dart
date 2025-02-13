@@ -22,6 +22,8 @@ class Game extends StatefulWidget {
 
 class _GameState extends State<Game> {
   late Puzzle _puzzle;
+  int? selectedx;
+  int? selectedy;
 
 @override
   void initState() {
@@ -31,6 +33,13 @@ class _GameState extends State<Game> {
       
     }));
     super.initState();
+  }
+
+  void _onCellTapped(int x,int y){
+    setState(() {
+      selectedx=x;
+      selectedy=y;
+    });
   }
 
   @override
@@ -80,7 +89,7 @@ class _GameState extends State<Game> {
                           crossAxisCount: 3,
                         children: List.generate(9,(y){
                           int? cellvalue=_puzzle.board()?.matrix()?[x][y].getValue();
-                          return  GrilleInterne(x: x, y: y,value: cellvalue);
+                          return  GrilleInterne(x: x, y: y,value: cellvalue, isSelected: selectedx==x && selectedy==y,onTap: ()=> _onCellTapped(x,y));
                         }),
                       ),
                     );
